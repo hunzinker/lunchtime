@@ -32,7 +32,6 @@ crepes a la crepes
 eggshell cafe"
 
 COIN_FLIP=
-REPEAT=
 LUNCHTIME=
 
 #
@@ -70,16 +69,16 @@ _check_data_file() {
 #
 _no_repeats() {
 
-    REPEAT=0
+    local repeat=0
 
     while read line; do
         if [[ "${line}" == "${LUNCHTIME}" ]]; then
-            REPEAT=1
+            repeat=1
             break
         fi
     done < $DATA_FILE
 
-    if [[ $REPEAT -gt 0 ]]; then
+    if [[ $repeat -gt 0 ]]; then
         lunchtime
     else
         echo $LUNCHTIME >> $DATA_FILE
