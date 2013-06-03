@@ -50,8 +50,8 @@ _flip_coin() {
 #
 _check_data_file() {
 
-    max=5
-    lines=$(wc -l $DATA_FILE_PATH | cut -d " " -f 1)
+    local max=5
+    local lines=$(wc -l $DATA_FILE_PATH | cut -d " " -f 1)
 
     if [[ ! -e "${DATA_FILE_PATH}" || $lines -ge $max ]]; then
         > "${DATA_FILE_PATH}"
@@ -63,8 +63,6 @@ _check_data_file() {
 # Make sure we don't eat at the same place more than once a week!
 #
 _no_repeats() {
-
-    _check_data_file
 
     while read line; do
         if [[ "${line}" == "${LUNCHTIME}" ]]; then
@@ -87,6 +85,7 @@ _no_repeats() {
 lunchtime() {
 
     _flip_coin
+    _check_data_file
 
     if [[ $COIN_FLIP -eq 0 ]]; then
         LUNCHTIME=$(echo "${PLACES}" | sort -R | sort -R | sort -R | head -n 1)
@@ -118,3 +117,5 @@ cat <<-ART
 ##############################################################################
 ##############################################################################
 ART
+
+exit 0
