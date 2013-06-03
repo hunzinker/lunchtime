@@ -2,8 +2,7 @@
 #
 # It's lunchtime!!
 
-DATA_FILE=".lunchdata"
-DATA_FILE_PATH="${HOME}/${DATA_FILE}"
+DATA_FILE="${HOME}/.lunchdata"
 
 PLACES="whole foods
 patxis
@@ -33,7 +32,7 @@ crepes a la crepes
 eggshell cafe"
 
 COIN_FLIP=
-REPEAT=0
+REPEAT=
 LUNCHTIME=
 
 #
@@ -51,10 +50,17 @@ _flip_coin() {
 _check_data_file() {
 
     local max=5
-    local lines=$(wc -l $DATA_FILE_PATH | cut -d " " -f 1)
+    local lines=0
 
-    if [[ ! -e "${DATA_FILE_PATH}" || $lines -ge $max ]]; then
-        > "${DATA_FILE_PATH}"
+    if [[ ! -e "${DATA_FILE}" ]]; then
+        > ${DATA_FILE}
+        return
+    fi
+
+    lines=$(wc -l ${DATA_FILE} | cut -d " " -f 1)
+
+    if [[ $lines -ge $max ]]; then
+        > ${DATA_FILE}
     fi
 
 }
@@ -64,19 +70,21 @@ _check_data_file() {
 #
 _no_repeats() {
 
+    REPEAT=0
+
     while read line; do
         if [[ "${line}" == "${LUNCHTIME}" ]]; then
             REPEAT=1
             break
         fi
-    done < $DATA_FILE_PATH
+    done < $DATA_FILE
 
     if [[ $REPEAT -gt 0 ]]; then
         lunchtime
     else
-        echo $LUNCHTIME >> $DATA_FILE_PATH
-        REPEAT=0
+        echo $LUNCHTIME >> $DATA_FILE
     fi
+
 }
 
 #
