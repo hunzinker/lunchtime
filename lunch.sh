@@ -2,6 +2,9 @@
 #
 # It's lunchtime!!
 
+DATA_FILE=".lunchdata"
+DATA_FILE_PATH="${HOME}/${DATA_FILE}"
+
 PLACES="whole foods
 patxis
 chipotle
@@ -29,13 +32,77 @@ machette
 crepes a la crepes
 eggshell cafe"
 
-COIN_FLIP=$(echo "${RANDOM} % 2" | bc)
+COIN_FLIP=
+REPEAT=0
+LUNCHTIME=
 
-if [[ $COIN_FLIP -eq 0 ]]; then
-    LUNCHTIME=$(echo "${PLACES}" | sort -R | sort -R | sort -R | head -n 1)
-else
-    LUNCHTIME=$(echo "${PLACES}" | sort -R | sort -R | sort -R | tail -n 1)
-fi
+#
+# Heads or tails?
+#
+_flip_coin() {
+
+    COIN_FLIP=$(echo "${RANDOM} % 2" | bc)
+
+}
+
+#
+# Ensure data file exists.
+#
+_check_data_file() {
+
+    max=5
+    lines=$(wc -l $DATA_FILE_PATH | cut -d " " -f 1)
+
+    if [[ ! -e "${DATA_FILE_PATH}" || $lines -ge $max ]]; then
+        > "${DATA_FILE_PATH}"
+    fi
+
+}
+
+#
+# Make sure we don't eat at the same place more than once a week!
+#
+_no_repeats() {
+
+    _check_data_file
+
+    while read line; do
+        if [[ "${line}" == "${LUNCHTIME}" ]]; then
+            REPEAT=1
+            break
+        fi
+    done < $DATA_FILE_PATH
+
+    if [[ $REPEAT -gt 0 ]]; then
+        lunchtime
+    else
+        echo $LUNCHTIME >> $DATA_FILE_PATH
+        REPEAT=0
+    fi
+}
+
+#
+# Where to?
+#
+lunchtime() {
+
+    _flip_coin
+
+    if [[ $COIN_FLIP -eq 0 ]]; then
+        LUNCHTIME=$(echo "${PLACES}" | sort -R | sort -R | sort -R | head -n 1)
+    else
+        LUNCHTIME=$(echo "${PLACES}" | sort -R | sort -R | sort -R | tail -n 1)
+    fi
+
+    _no_repeats
+
+    if [[ -z ${LUNCHTIME} ]]; then
+        echo "An unexpected error occurred. Go to McDonalds."
+        exit 1
+    fi
+}
+
+lunchtime
 
 cat <<-ART
 ##############################################################################
