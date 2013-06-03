@@ -33,7 +33,8 @@ phat thai
 kona grill
 california pizza kitchen
 margs
-eggshell cafe"
+eggshell cafe
+patio grilling party"
 
 COIN_FLIP=
 LUNCHTIME=
