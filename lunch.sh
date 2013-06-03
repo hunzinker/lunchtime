@@ -40,6 +40,37 @@ COIN_FLIP=
 LUNCHTIME=
 
 #
+# Ensure we are using gnu core utils.
+#
+_check_binaries() {
+
+    local name=$(uname)
+    local fail=0
+
+    echo "foo" | sort -R > /dev/null 2>&1
+
+    if [[ $? -gt 0 ]]; then
+        fail=1
+    fi
+
+    if [[ ${fail} -gt 0 ]]; then
+
+        if [[ "${name}" == "Darwin" ]]; then
+            echo "System: ${name}  "
+            echo "brew install coreutils should fix the problem..."
+        elif [[ "${name}" == "Linux" ]]; then
+            echo "System: ${name}  "
+            echo "sudo <package manager> install coreutils should fix the problem..."
+        else
+            echo "System: ${name}  "
+            echo "Not supported :'("
+        fi
+
+        exit 1
+    fi
+}
+
+#
 # Heads or tails?
 #
 _flip_coin() {
@@ -96,6 +127,8 @@ _no_repeats() {
 #
 lunchtime() {
 
+    _check_binaries
+
     _flip_coin
     _check_data_file
 
@@ -108,7 +141,7 @@ lunchtime() {
     _no_repeats
 
     if [[ -z ${LUNCHTIME} ]]; then
-        echo "An unexpected error occurred. Go to McDonalds."
+        echo "An unexpected error occurred. Go to McDonalds..."
         exit 1
     fi
 }
