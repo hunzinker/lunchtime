@@ -29,6 +29,10 @@ aye caramba
 shotgun willi's
 machette
 crepes a la crepes
+phat thai
+kona grill
+california pizza kitchen
+margs
 eggshell cafe"
 
 COIN_FLIP=
