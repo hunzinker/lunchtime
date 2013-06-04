@@ -3,6 +3,6 @@ lunchtime
 
 Where?
 
-    ./lunch.sh
+    ./lunch.bash
 
 To find out!
