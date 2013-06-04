@@ -1,8 +1,13 @@
-#!/bin/sh
+#!/bin/bash
 #
 # It's lunchtime!!
 
+BINARIES=( bc sort )
+
 DATA_FILE="${HOME}/.lunchdata"
+
+# Maximum number of places to prevent repeats.
+MAX_DATA_FILE_LINES=5
 
 PLACES="whole foods
 patxis
@@ -40,25 +45,25 @@ COIN_FLIP=
 LUNCHTIME=
 
 #
-# Ensure we are using gnu core utils.
+# Ensure we have access to sort -R, --random-sort
 #
-_check_binaries() {
+_check_sort() {
 
     local name=$(uname)
     local fail=0
 
     echo "foo" | sort -R > /dev/null 2>&1
 
-    if [[ $? -gt 0 ]]; then
+    if [ $? -gt 0 ]; then
         fail=1
     fi
 
-    if [[ ${fail} -gt 0 ]]; then
+    if [ ${fail} -gt 0 ]; then
 
-        if [[ "${name}" == "Darwin" ]]; then
+        if [ "${name}" == "Darwin" ]; then
             echo "System: ${name}  "
             echo "brew install coreutils should fix the problem..."
-        elif [[ "${name}" == "Linux" ]]; then
+        elif [ "${name}" == "Linux" ]; then
             echo "System: ${name}  "
             echo "sudo <package manager> install coreutils should fix the problem..."
         else
@@ -68,6 +73,24 @@ _check_binaries() {
 
         exit 1
     fi
+
+}
+
+#
+# Ensure binaries are available.
+#
+_check_binaries() {
+
+    for b in ${BINARIES}; do
+        hash "$b" > /dev/null 2>&1
+        if [ $? -gt 0 ]; then
+            echo "Missing binary: ${b}  please install to continue..."
+            exit 1
+        fi
+    done
+
+    _check_sort
+
 }
 
 #
@@ -84,17 +107,16 @@ _flip_coin() {
 #
 _check_data_file() {
 
-    local max=5
     local lines=0
 
-    if [[ ! -e "${DATA_FILE}" ]]; then
+    if [ ! -e "${DATA_FILE}" ]; then
         > ${DATA_FILE}
         return
     fi
 
     lines=$(wc -l ${DATA_FILE} | cut -d " " -f 1)
 
-    if [[ $lines -ge $max ]]; then
+    if [ $lines -ge $MAX_DATA_FILE_LINES ]; then
         > ${DATA_FILE}
     fi
 
@@ -108,13 +130,13 @@ _no_repeats() {
     local repeat=0
 
     while read line; do
-        if [[ "${line}" == "${LUNCHTIME}" ]]; then
+        if [ "${line}" == "${LUNCHTIME}" ]; then
             repeat=1
             break
         fi
     done < $DATA_FILE
 
-    if [[ $repeat -gt 0 ]]; then
+    if [ $repeat -gt 0 ]; then
         lunchtime
     else
         echo $LUNCHTIME >> $DATA_FILE
@@ -140,7 +162,7 @@ lunchtime() {
 
     _no_repeats
 
-    if [[ -z ${LUNCHTIME} ]]; then
+    if [ -z "${LUNCHTIME}" ]; then
         echo "An unexpected error occurred. Go to McDonalds..."
         exit 1
     fi
