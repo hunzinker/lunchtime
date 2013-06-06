@@ -81,7 +81,7 @@ _check_sort() {
 #
 _check_binaries() {
 
-    for b in ${BINARIES}; do
+    for b in ${BINARIES[@]}; do
         hash "$b" > /dev/null 2>&1
         if [ $? -gt 0 ]; then
             echo "Missing binary: ${b}  please install to continue..."
