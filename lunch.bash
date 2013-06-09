@@ -60,16 +60,20 @@ _check_sort() {
 
     if [ ${fail} -gt 0 ]; then
 
-        if [ "${name}" == "Darwin" ]; then
-            echo "System: ${name}  "
-            echo "brew install coreutils should fix the problem..."
-        elif [ "${name}" == "Linux" ]; then
-            echo "System: ${name}  "
-            echo "sudo <package manager> install coreutils should fix the problem..."
-        else
-            echo "System: ${name}  "
-            echo "Not supported :'("
-        fi
+        case $name in
+            "Darwin")
+                echo "System: ${name}  "
+                echo "brew install coreutils should fix the problem..."
+                ;;
+            "Linux")
+                echo "System: ${name}  "
+                echo "sudo <package manager> install coreutils should fix the problem..."
+                ;;
+            *)
+                echo "System: ${name}  "
+                echo "Not supported :'("
+                ;;
+        esac
 
         exit 1
     fi
