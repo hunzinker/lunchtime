@@ -2,47 +2,45 @@
 #
 # It's lunchtime!!
 
-BINARIES=( bc sort )
-
-DATA_FILE="${HOME}/.lunchdata"
 
 # Maximum number of places to prevent repeats.
 MAX_DATA_FILE_LINES=5
 
-PLACES="whole foods
-patxis
-chipotle
-sweet ginger
-true food kitchen
-tony p's
-pasta pasta pasta
-mici
-continental deli
-zaidys
-101 asian
-so perfect eats
-mad greens
-little olies's
-earls
-north
-cherry cricket
-hapa
-the hawt
-bombay clay oven
-cherry creek grill
-aye caramba
-shotgun willi's
-machette
-crepes a la crepes
-phat thai
-kona grill
-california pizza kitchen
-margs
-eggshell cafe
-patio grilling party"
-
 COIN_FLIP=
 LUNCHTIME=
+
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do
+    DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+    SOURCE="$(readlink "$SOURCE")"
+    [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+done
+DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+
+DATA_FILE="${HOME}/.lunchdata"
+LUNCHBOX="${DIR}/data/places.lunchbox"
+
+usage() {
+
+cat <<-USAGE
+
+    Lunchtime
+
+    usage: lunch.bash [-fp]
+
+    -f lunchbox file        Path to lunchbox file.
+    -p print                Print lunchbox contents.
+
+    (-h)                    Display this message.
+
+    License:
+    MIT
+
+    Author:
+    Ken Seal
+
+USAGE
+}
 
 #
 # Ensure we have access to sort -R, --random-sort
@@ -85,7 +83,9 @@ _check_sort() {
 #
 _check_binaries() {
 
-    for b in ${BINARIES[@]}; do
+    local binaries=( bc sort )
+
+    for b in ${binaries[@]}; do
         hash "$b" > /dev/null 2>&1
         if [ $? -gt 0 ]; then
             echo "Missing binary: ${b}  please install to continue..."
@@ -159,9 +159,9 @@ lunchtime() {
     _check_data_file
 
     if [[ $COIN_FLIP -eq 0 ]]; then
-        LUNCHTIME=$(echo "${PLACES}" | sort -R | sort -R | sort -R | head -n 1)
+        LUNCHTIME=$(cat ${LUNCHBOX} | sort -R | sort -R | sort -R | head -n 1)
     else
-        LUNCHTIME=$(echo "${PLACES}" | sort -R | sort -R | sort -R | tail -n 1)
+        LUNCHTIME=$(cat ${LUNCHBOX} | sort -R | sort -R | sort -R | tail -n 1)
     fi
 
     _no_repeats
