@@ -2,12 +2,11 @@
 #
 # It's lunchtime!!
 
+LUNCHTIME=
+COIN_FLIP=
 
 # Maximum number of places to prevent repeats.
 MAX_DATA_FILE_LINES=5
-
-COIN_FLIP=
-LUNCHTIME=
 
 SOURCE="${BASH_SOURCE[0]}"
 while [ -h "$SOURCE" ]; do
@@ -26,12 +25,11 @@ cat <<-USAGE
 
     Lunchtime
 
-    usage: lunch.bash [-fp]
+    usage: lunch.bash [-f]
 
-    -f lunchbox file        Path to lunchbox file.
-    -p print                Print lunchbox contents.
+    -f lunchbox file            Path to lunchbox file.
 
-    (-h)                    Display this message.
+    (-h)                        Display this message.
 
     License:
     MIT
