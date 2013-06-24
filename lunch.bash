@@ -2,7 +2,7 @@
 #
 # It's lunchtime!!
 
-BINARIES=( bc sort )
+BINARIES=( sort )
 
 DATA_FILE="${HOME}/.lunchdata"
 
@@ -102,7 +102,7 @@ _check_binaries() {
 #
 _flip_coin() {
 
-    COIN_FLIP=$(echo "${RANDOM} % 2" | bc)
+    COIN_FLIP=$(expr ${RANDOM} % 2)
 
 }
 
