@@ -14,7 +14,6 @@ patxis
 chipotle
 sweet ginger
 true food kitchen
-tony p's
 pasta pasta pasta
 mici
 continental deli
@@ -34,7 +33,6 @@ aye caramba
 shotgun willi's
 machette
 crepes a la crepes
-phat thai
 kona grill
 california pizza kitchen
 margs
