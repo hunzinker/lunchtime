@@ -64,6 +64,19 @@ USAGE
 }
 
 #
+# Set data file.
+#
+_set_file() {
+
+    PLACES=$(<$FILE)
+    num=$(echo "${PLACES}" | wc -l)
+    if [ $num -lt $MAX_DATA_FILE_LINES ]; then
+        MAX_DATA_FILE_LINES="${num}"
+    fi
+
+}
+
+#
 # Ensure we have access to sort -R, --random-sort
 #
 _check_sort() {
@@ -195,7 +208,7 @@ while getopts ':f:h' OPTION; do
     case $OPTION in
     f)  FILE="${OPTARG}"
         if [ -e $FILE ]; then
-            PLACES=$(<$FILE)
+            _set_file
         else
             printf "Irregular file for -%s\n" $OPTARG
             exit 1
