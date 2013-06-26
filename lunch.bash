@@ -2,22 +2,45 @@
 #
 # It's lunchtime!!
 
-LUNCHTIME=
-COIN_FLIP=
+BINARIES=( sort )
+
+DATA_FILE="${HOME}/.lunchdata"
 
 # Maximum number of places to prevent repeats.
 MAX_DATA_FILE_LINES=5
 
-SOURCE="${BASH_SOURCE[0]}"
-while [ -h "$SOURCE" ]; do
-    DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
-    SOURCE="$(readlink "$SOURCE")"
-    [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
-done
-DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+PLACES="whole foods
+patxis
+chipotle
+sweet ginger
+true food kitchen
+pasta pasta pasta
+mici
+continental deli
+zaidys
+101 asian
+so perfect eats
+mad greens
+little olies's
+earls
+north
+cherry cricket
+hapa
+the hawt
+bombay clay oven
+cherry creek grill
+aye caramba
+shotgun willi's
+machette
+crepes a la crepes
+kona grill
+california pizza kitchen
+margs
+eggshell cafe
+patio grilling party"
 
-DATA_FILE="${HOME}/.lunchdata"
-LUNCHBOX="${DIR}/data/places.lunchbox"
+COIN_FLIP=
+LUNCHTIME=
 
 usage() {
 
@@ -81,9 +104,7 @@ _check_sort() {
 #
 _check_binaries() {
 
-    local binaries=( bc sort )
-
-    for b in ${binaries[@]}; do
+    for b in ${BINARIES[@]}; do
         hash "$b" > /dev/null 2>&1
         if [ $? -gt 0 ]; then
             echo "Missing binary: ${b}  please install to continue..."
@@ -100,7 +121,7 @@ _check_binaries() {
 #
 _flip_coin() {
 
-    COIN_FLIP=$(echo "${RANDOM} % 2" | bc)
+    COIN_FLIP=$(expr ${RANDOM} % 2)
 
 }
 
@@ -157,9 +178,9 @@ lunchtime() {
     _check_data_file
 
     if [[ $COIN_FLIP -eq 0 ]]; then
-        LUNCHTIME=$(cat ${LUNCHBOX} | sort -R | sort -R | sort -R | head -n 1)
+        LUNCHTIME=$(echo "${PLACES}" | sort -R | head -n 1)
     else
-        LUNCHTIME=$(cat ${LUNCHBOX} | sort -R | sort -R | sort -R | tail -n 1)
+        LUNCHTIME=$(echo "${PLACES}" | sort -R | tail -n 1)
     fi
 
     _no_repeats
@@ -170,21 +191,44 @@ lunchtime() {
     fi
 }
 
+while getopts ':f:h' OPTION; do
+    case $OPTION in
+    f)  FILE="${OPTARG}"
+        if [ -e $FILE ]; then
+            PLACES=$(<$FILE)
+        else
+            printf "Irregular file for -%s\n" $OPTARG
+            exit 1
+        fi
+        ;;
+    h)  usage
+        exit 0
+        ;;
+    \:) printf "Argument missing from -%s option\n" $OPTARG
+        usage
+        exit 1
+        ;;
+    \?) printf "Unknown option: -%s\n" $OPTARG
+        usage
+        exit 1
+        ;;
+    esac
+done
+shift $(($OPTIND - 1))
+
 lunchtime
 
 cat <<-ART
-##############################################################################
-##############################################################################
-#########################. .. ......############/----------------#############
-#####################... .. .... .. ..######## / I want to go to \            
-###################..... .... ... .....#######/  $LUNCHTIME /                 
-#################....,...,;,...... ... .#####/ /##############################
-################.....(*)(*).\... ......#####//################################
-################.... .......|⊐...... .########################################
-#################......,___/........##########################################
-###################...............############################################
-##############################################################################
-##############################################################################
+######################################################################
+###################. .. ......############/----------------###########
+###############... .. .... .. ..######## / I want to go to \          
+#############..... .... ... .....#######/  $LUNCHTIME /               
+###########....,...,;,...... ... .#####/ /############################
+##########.....(*)(*).\... ......#####//##############################
+##########.... .......|⊐...... .######################################
+###########......,___/........########################################
+#############...............##########################################
+######################################################################
 ART
 
 exit 0
