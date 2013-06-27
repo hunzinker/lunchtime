@@ -5,6 +5,8 @@
 ##---- Global Variables ----------------------------------------------------##
 
 
+VERSION="1.0.0"
+
 BINARIES=( sort )
 
 DATA_FILE="${HOME}/.lunchdata"
@@ -176,12 +178,12 @@ usage() {
 
 cat <<-USAGE
 
-    Lunchtime
+    Lunchtime v$VERSION
 
     usage: lunch.bash [-f]
 
     -f lunchbox file            Path to newline (\n) delimited lunchbox file.
-
+    -v version                  Display version.
     (-h)                        Display this message.
 
     License:
@@ -225,10 +227,13 @@ lunchtime() {
 ##---- Begin ---------------------------------------------------------------##
 
 
-while getopts ':f:h' OPTION; do
+while getopts ':f:vh' OPTION; do
     case $OPTION in
     f)  FILE="${OPTARG}"
         _validate_file
+        ;;
+    v)  echo "v${VERSION}"
+        exit 0
         ;;
     h)  usage
         exit 0
