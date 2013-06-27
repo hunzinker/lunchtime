@@ -5,7 +5,7 @@
 ##---- Global Variables ----------------------------------------------------##
 
 
-VERSION=
+VERSION="0.1.0"
 
 BINARIES=( sort )
 
