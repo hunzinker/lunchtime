@@ -2,6 +2,9 @@
 #
 # It's lunchtime!!
 
+##---- Global Variables ----------------------------------------------------##
+
+
 BINARIES=( sort )
 
 DATA_FILE="${HOME}/.lunchdata"
@@ -9,38 +12,53 @@ DATA_FILE="${HOME}/.lunchdata"
 # Maximum number of places to prevent repeats.
 MAX_DATA_FILE_LINES=5
 
-PLACES="whole foods
-patxis
-chipotle
-sweet ginger
-true food kitchen
-pasta pasta pasta
-mici
-continental deli
-zaidys
-101 asian
-so perfect eats
-mad greens
-little olies's
-earls
-north
-cherry cricket
-hapa
-the hawt
-bombay clay oven
-cherry creek grill
-aye caramba
-shotgun willi's
-machette
-crepes a la crepes
-kona grill
-california pizza kitchen
-margs
-eggshell cafe
-patio grilling party"
+# Default lunch choices.
+PLACES="Chipotle
+Jimmy John's
+Subway
+Taco Bell
+Wendy's
+Whole Foods"
 
+FILE=
 COIN_FLIP=
 LUNCHTIME=
+
+
+##---- End Global Variables ------------------------------------------------##
+
+
+
+##---- Private -------------------------------------------------------------##
+
+
+#
+# Check max data file lines.
+#
+_check_max_data_file_lines() {
+
+    local num=$(echo "${PLACES}" | wc -l)
+    if [ $num -lt $MAX_DATA_FILE_LINES ]; then
+        MAX_DATA_FILE_LINES="${num}"
+    fi
+
+}
+
+#
+# Validate and read input file.
+#
+_validate_file() {
+
+    if [ ! -e $FILE ]; then
+        printf "Irregular file: %s\n" $FILE
+        exit 1
+    fi
+
+    PLACES=$(<$FILE)
+
+    _check_max_data_file_lines
+
+}
 
 #
 # Ensure we have access to sort -R, --random-sort
@@ -146,6 +164,35 @@ _no_repeats() {
 
 }
 
+
+##---- End Private ---------------------------------------------------------##
+
+
+
+##---- Public --------------------------------------------------------------##
+
+
+usage() {
+
+cat <<-USAGE
+
+    Lunchtime
+
+    usage: lunch.bash [-f]
+
+    -f lunchbox file            Path to newline (\n) delimited lunchbox file.
+
+    (-h)                        Display this message.
+
+    License:
+    MIT
+
+    Author:
+    Ken Seal
+
+USAGE
+}
+
 #
 # Where to?
 #
@@ -157,9 +204,9 @@ lunchtime() {
     _check_data_file
 
     if [[ $COIN_FLIP -eq 0 ]]; then
-        LUNCHTIME=$(echo "${PLACES}" | sort -R | sort -R | sort -R | head -n 1)
+        LUNCHTIME=$(echo "${PLACES}" | sort -R | head -n 1)
     else
-        LUNCHTIME=$(echo "${PLACES}" | sort -R | sort -R | sort -R | tail -n 1)
+        LUNCHTIME=$(echo "${PLACES}" | sort -R | tail -n 1)
     fi
 
     _no_repeats
@@ -169,6 +216,34 @@ lunchtime() {
         exit 1
     fi
 }
+
+
+##---- End Public ----------------------------------------------------------##
+
+
+
+##---- Begin ---------------------------------------------------------------##
+
+
+while getopts ':f:h' OPTION; do
+    case $OPTION in
+    f)  FILE="${OPTARG}"
+        _validate_file
+        ;;
+    h)  usage
+        exit 0
+        ;;
+    \:) printf "Argument missing: %s option\n" $OPTARG
+        usage
+        exit 1
+        ;;
+    \?) printf "Unknown option: %s\n" $OPTARG
+        usage
+        exit 1
+        ;;
+    esac
+done
+shift $(($OPTIND - 1))
 
 lunchtime
 
@@ -186,3 +261,6 @@ cat <<-ART
 ART
 
 exit 0
+
+
+##---- End -----------------------------------------------------------------##

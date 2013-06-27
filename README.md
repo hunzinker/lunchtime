@@ -3,6 +3,20 @@ lunchtime
 
 Where?
 
-    ./lunch.bash
+    lunch.bash
 
-To find out!
+Help?
+
+    Lunchtime
+
+    usage: lunch.bash [-f]
+
+    -f lunchbox file            Path to newline (\n) delimited lunchbox file.
+
+    (-h)                        Display this message.
+
+    License:
+    MIT
+
+    Author:
+    Ken Seal
