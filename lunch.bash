@@ -5,7 +5,7 @@
 ##---- Global Variables ----------------------------------------------------##
 
 
-VERSION="1.0.0"
+VERSION=
 
 BINARIES=( sort )
 
@@ -180,11 +180,14 @@ cat <<-USAGE
 
     Lunchtime v$VERSION
 
-    usage: lunch.bash [-f]
+    usage: lunch.bash [OPTIONS]
+
+    Optional arguments:
 
     -f lunchbox file            Path to newline (\n) delimited lunchbox file.
-    -v version                  Display version.
-    (-h)                        Display this message.
+
+    -v version                  Display version and exit.
+    (-h)                        Display this message and exit.
 
     License:
     MIT
