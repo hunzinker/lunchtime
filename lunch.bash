@@ -9,36 +9,15 @@ DATA_FILE="${HOME}/.lunchdata"
 # Maximum number of places to prevent repeats.
 MAX_DATA_FILE_LINES=5
 
-PLACES="whole foods
-patxis
-chipotle
-sweet ginger
-true food kitchen
-pasta pasta pasta
-mici
-continental deli
-zaidys
-101 asian
-so perfect eats
-mad greens
-little olies's
-earls
-north
-cherry cricket
-hapa
-the hawt
-bombay clay oven
-cherry creek grill
-aye caramba
-shotgun willi's
-machette
-crepes a la crepes
-kona grill
-california pizza kitchen
-margs
-eggshell cafe
-patio grilling party"
+# Default lunch choices.
+PLACES="Chipotle
+Jimmy John's
+Subway
+Taco Bell
+Wendy's
+Whole Foods"
 
+FILE=
 COIN_FLIP=
 LUNCHTIME=
 
@@ -50,7 +29,7 @@ cat <<-USAGE
 
     usage: lunch.bash [-f]
 
-    -f lunchbox file            Path to lunchbox file.
+    -f lunchbox file            Path to newline (\n) delimited lunchbox file.
 
     (-h)                        Display this message.
 
@@ -64,15 +43,30 @@ USAGE
 }
 
 #
-# Set data file.
+# Check max data file lines.
 #
-_set_file() {
+_check_max_data_file_lines() {
 
-    PLACES=$(<$FILE)
-    num=$(echo "${PLACES}" | wc -l)
+    local num=$(echo "${PLACES}" | wc -l)
     if [ $num -lt $MAX_DATA_FILE_LINES ]; then
         MAX_DATA_FILE_LINES="${num}"
     fi
+
+}
+
+#
+# Validate and read input file.
+#
+_validate_file() {
+
+    if [ ! -e $FILE ]; then
+        printf "Irregular file: %s\n" $FILE
+        exit 1
+    fi
+
+    PLACES=$(<$FILE)
+
+    _check_max_data_file_lines
 
 }
 
@@ -207,21 +201,16 @@ lunchtime() {
 while getopts ':f:h' OPTION; do
     case $OPTION in
     f)  FILE="${OPTARG}"
-        if [ -e $FILE ]; then
-            _set_file
-        else
-            printf "Irregular file for -%s\n" $OPTARG
-            exit 1
-        fi
+        _validate_file
         ;;
     h)  usage
         exit 0
         ;;
-    \:) printf "Argument missing from -%s option\n" $OPTARG
+    \:) printf "Argument missing: %s option\n" $OPTARG
         usage
         exit 1
         ;;
-    \?) printf "Unknown option: -%s\n" $OPTARG
+    \?) printf "Unknown option: %s\n" $OPTARG
         usage
         exit 1
         ;;
