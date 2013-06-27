@@ -2,6 +2,9 @@
 #
 # It's lunchtime!!
 
+##---- Global Variables ----------------------------------------------------##
+
+
 BINARIES=( sort )
 
 DATA_FILE="${HOME}/.lunchdata"
@@ -21,26 +24,13 @@ FILE=
 COIN_FLIP=
 LUNCHTIME=
 
-usage() {
 
-cat <<-USAGE
+##---- End Global Variables ------------------------------------------------##
 
-    Lunchtime
 
-    usage: lunch.bash [-f]
 
-    -f lunchbox file            Path to newline (\n) delimited lunchbox file.
+##---- Private -------------------------------------------------------------##
 
-    (-h)                        Display this message.
-
-    License:
-    MIT
-
-    Author:
-    Ken Seal
-
-USAGE
-}
 
 #
 # Check max data file lines.
@@ -174,6 +164,35 @@ _no_repeats() {
 
 }
 
+
+##---- End Private ---------------------------------------------------------##
+
+
+
+##---- Public --------------------------------------------------------------##
+
+
+usage() {
+
+cat <<-USAGE
+
+    Lunchtime
+
+    usage: lunch.bash [-f]
+
+    -f lunchbox file            Path to newline (\n) delimited lunchbox file.
+
+    (-h)                        Display this message.
+
+    License:
+    MIT
+
+    Author:
+    Ken Seal
+
+USAGE
+}
+
 #
 # Where to?
 #
@@ -197,6 +216,14 @@ lunchtime() {
         exit 1
     fi
 }
+
+
+##---- End Public ----------------------------------------------------------##
+
+
+
+##---- Begin ---------------------------------------------------------------##
+
 
 while getopts ':f:h' OPTION; do
     case $OPTION in
@@ -234,3 +261,6 @@ cat <<-ART
 ART
 
 exit 0
+
+
+##---- End -----------------------------------------------------------------##
