@@ -1,22 +1,29 @@
 lunchtime
 =========
 
-Where?
+Tired of eating boring sandwiches for lunch? Sticky lids on yesterday's soup
+containers getting you down?
 
-    lunch.bash
+![Lunch Fail](http://i0.kym-cdn.com/photos/images/original/000/497/629/a11.gif)
 
-Help?
+Try lunchtime! It's fast. It's easy. And best of all, it's free!
 
-    Lunchtime
+Where should I go?
 
-    usage: lunch.bash [-f]
+```bash
+lunch.bash
+```
 
-    -f lunchbox file            Path to newline (\n) delimited lunchbox file.
+Need variety?
 
-    (-h)                        Display this message.
+```bash
+lunch.bash -f /path/to/newline/delimited/lunchbox/file
+```
 
-    License:
-    MIT
+See `lunchbox_example` for more information.
 
-    Author:
-    Ken Seal
+Lost?
+
+```bash
+lunch.bash -h
+```
