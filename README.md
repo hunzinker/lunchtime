@@ -11,7 +11,7 @@ Help?
 
     usage: lunch.bash [-f]
 
-    -f lunchbox file            Path to lunchbox file.
+    -f lunchbox file            Path to newline (\n) delimited lunchbox file.
 
     (-h)                        Display this message.
 
