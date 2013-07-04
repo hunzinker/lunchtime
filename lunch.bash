@@ -68,15 +68,10 @@ _validate_file() {
 _check_sort() {
 
     local name=$(uname)
-    local fail=0
 
     echo "foo" | sort -R > /dev/null 2>&1
 
     if [ $? -gt 0 ]; then
-        fail=1
-    fi
-
-    if [ ${fail} -gt 0 ]; then
 
         case $name in
             "Darwin")
