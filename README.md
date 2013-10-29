@@ -32,6 +32,8 @@ lunch.bash -h
 
 Create `lunchbox/places` in Hubot's root directory to add your own variety. Add the below to `scripts/lunch.coffee`.
 
+https://gist.github.com/hunzinker/7207075
+
 ```coffeescript
 # Description:
 #   Lunch is the most important meal of the day!
