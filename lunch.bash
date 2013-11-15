@@ -11,8 +11,10 @@ BINARIES=( sort )
 
 DATA_FILE="${HOME}/.lunchdata"
 
-# Maximum number of places to prevent repeats.
-MAX_DATA_FILE_LINES=5
+# Number of unique places to prevent repeats. Defaults to 5.
+DEFAULT_UNIQUE_PLACES=5
+
+MAX_DATA_FILE_LINES=$DEFAULT_UNIQUE_PLACES
 
 # Default lunch choices.
 PLACES="Chipotle
@@ -181,6 +183,10 @@ cat <<-USAGE
 
     -f lunchbox file            Path to newline (\n) delimited lunchbox file.
 
+    -u number of unique places  Number of unique places lunchtime returns
+                                before introducing repeats.
+                                Defaults to $DEFAULT_UNIQUE_PLACES.
+
     -v version                  Display version and exit.
     (-h)                        Display this message and exit.
 
@@ -223,10 +229,12 @@ lunchtime() {
 ##---- Begin ---------------------------------------------------------------##
 
 
-while getopts ':f:vh' OPTION; do
+while getopts ':f:u:vh' OPTION; do
     case $OPTION in
     f)  FILE="${OPTARG}"
         _validate_file
+        ;;
+    u)  MAX_DATA_FILE_LINES="${OPTARG}"
         ;;
     v)  echo "v${VERSION}"
         exit 0
