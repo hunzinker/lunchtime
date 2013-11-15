@@ -198,8 +198,6 @@ USAGE
 #
 lunchtime() {
 
-    _check_binaries
-
     _flip_coin
     _check_data_file
 
@@ -247,6 +245,8 @@ while getopts ':f:vh' OPTION; do
     esac
 done
 shift $(($OPTIND - 1))
+
+_check_binaries
 
 lunchtime
 
